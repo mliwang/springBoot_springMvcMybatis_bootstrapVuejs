@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"></meta>
+    <title>Vue终极测试</title>
+    <script src="http://static.runoob.com/assets/vue/1.0.11/vue.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+</head>
+<body>
+<div  id="repeat-object" >
+    <button v-on:click="secondgetList">getList</button>
+    <ul class="demo">
+        <li v-for="value in userlist">
+            <img alt="300x200"  src="/images/a.png" />
+            {{ value.Phone }}--{{ value.contacts }}--{{value.adress}}
+        </li>
+    </ul>
+</div>
+
+<script>
+    new Vue({
+        el: '#repeat-object',
+        data: {
+            userlist:[],
+            text:''
+        },
+
+        //方法
+        methods: {
+            secondgetList:function(){
+                let _this=this;
+                axios.get('/getConnectbooInfo')
+                        .then(function (response) {
+                            alert("成功");
+                            console.log(response);
+                            _this.userlist=response.data;
+                            alert("成功"+ _this.userlist);
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+
+            },
+
+        }
+    });
+</script>
+</body>
+</html>

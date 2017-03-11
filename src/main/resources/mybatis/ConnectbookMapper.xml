@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.noplay.mapper.ConnectbookMapper" >
+  <resultMap id="BaseResultMap" type="cn.noplay.model.Connectbook" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="contacts" property="contacts" jdbcType="VARCHAR" />
+    <result column="Phone" property="phone" jdbcType="INTEGER" />
+    <result column="mail" property="mail" jdbcType="VARCHAR" />
+    <result column="weixinnumber" property="weixinnumber" jdbcType="INTEGER" />
+    <result column="adress" property="adress" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, userid, contacts, Phone, mail, weixinnumber, adress
+  </sql>
+  <!--根据用户id查询联系人-->
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from connectbook
+    where userid = #{userid,jdbcType=INTEGER}
+  </select>
+ <!--根据主键查询-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from connectbook
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!--根据id删除某一联系人-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from connectbook
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+<!--增加联系人-->
+  <insert id="insert" parameterType="cn.noplay.model.Connectbook" >
+    insert into connectbook (id, userid, contacts, 
+      Phone, mail, weixinnumber, 
+      adress)
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{contacts,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=INTEGER}, #{mail,jdbcType=VARCHAR}, #{weixinnumber,jdbcType=INTEGER}, 
+      #{adress,jdbcType=VARCHAR})
+  </insert>
+
+
+ <!--修改联系人-->
+  <update id="updateByPrimaryKey" parameterType="cn.noplay.model.Connectbook" >
+    update connectbook
+    set userid = #{userid,jdbcType=INTEGER},
+      contacts = #{contacts,jdbcType=VARCHAR},
+      Phone = #{phone,jdbcType=INTEGER},
+      mail = #{mail,jdbcType=VARCHAR},
+      weixinnumber = #{weixinnumber,jdbcType=INTEGER},
+      adress = #{adress,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

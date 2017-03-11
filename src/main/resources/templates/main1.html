@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>main</title>
+    <!-- Bootstrap核心CSS文件 -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.min.css"></link>
+    <!-- 可选的Bootstrap主题文件(一般不用引入) -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap-theme.min.css"></link>
+    <!-- jQuery文件，在bootstrap.min.js之前引入 -->
+    <script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+    <!-- Bootstrap核心JavaScript文件 -->
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/vue2.js"></script>
+    <script src="/js/vue2.min.js"></script>
+
+</head>
+<body>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="btn btn-primary btn-lg" style="text-shadow: black 5px 3px 3px;">
+                <span class="glyphicon glyphicon-user"></span> 联系人
+            </button>
+            <button type="button" class="btn btn-default navbar-btn" id="modal-521717" href="#modal-container-521717" data-toggle="modal" style="margin-left:30px;">
+                <span class="glyphicon glyphicon-plus">添加</span>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse">
+            <form class="navbar-form navbar-left" role="search" style="margin-left:70px;">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search" style="width:500px;"></input>
+                </div>
+                <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-search"></span>搜索</button>
+            </form>
+
+            <ul class="nav navbar-nav navbar-right">
+
+                <button type="button" class="btn btn-warning navbar-btn" style="margin-right:20px;">
+                    退出
+                </button>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="panel-group" id="accordion2">
+    <div class="row clearfix">
+        <div class="col-md-12 column" id="app-4">
+            <button type="button" class="btn btn-info navbar-btn" v-on:click="getList">
+                查看全部
+            </button>
+            <div class="row">
+                <div class="col-md-4" v-for="item in lists">
+                    <div class="thumbnail">
+                        <img alt="300x200" src="/images/a.png" />
+                        <div class="caption">
+                            <h3>
+                                {{ item.contacts }}
+                            </h3>
+
+                            <p>
+
+                            <li class="dropdown">
+                                <a href="##" data-toggle="dropdown" class="dropdown-toggle" role="button" id="tutorial">详细信息<b class="caret"></b></a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="tutorial">
+                                    <li role="presentation"> {{ item.id }}</li>
+                                    <li role="presentation"><a href="##"> 邮箱：{{ item.mail }}</a></li>
+                                    <li role="presentation"><a href="##"> 手机：{{ item.Phone }}</a></li>
+                                    <li role="presentation"><a href="##">微信号： {{ item.weixinnumber }}</a></li>
+                                    <li role="presentation"><a href="##">地址： {{ item.adress }}</a></li>
+                                </ul>
+                            </li>
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<!--添加弹出框-->
+<div class="modal fade" id="modal-container-521717" role="dialog" aria-hidden="true" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-hidden="true" type="button" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">
+                    添加联系人
+                </h4>
+            </div>
+            <div class="modal-body">
+                内容...
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" type="button" data-dismiss="modal">关闭</button> <button class="btn btn-primary" type="button">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--获取lists数据-->
+<script type="text/javascript">
+    var app4;
+    app4 = new Vue({
+        el: '#app-4',
+        data: {
+            lists: []
+        },
+
+        methods: {
+            getList: function () {
+                var _this = this;
+                $.ajax({
+                    type: "post",
+                    url: "/getConnectbooInfo",    //向springboot请求数据的url
+                    data: {},
+                    success: function (data) {
+
+                        _this.lists = data;
+
+                        alert( "数据请求成功，已渲染");
+                    }
+                });
+
+            }
+
+        }
+    });
+</script>
+<!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+<script src="https://code.jquery.com/jquery.js"></script>
+
+</body>
+</html>

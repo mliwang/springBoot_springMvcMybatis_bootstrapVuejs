@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>单检索</title>
+    <!-- Bootstrap核心CSS文件 -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.min.css"></link>
+    <!-- 可选的Bootstrap主题文件(一般不用引入) -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap-theme.min.css"></link>
+    <!-- jQuery文件，在bootstrap.min.js之前引入 -->
+    <script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+    <!-- Bootstrap核心JavaScript文件 -->
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/vue2.js"></script>
+    <script src="/js/vue2.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+<body>
+<div id="app-4">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="btn btn-primary btn-lg" style="text-shadow: black 5px 3px 3px;">
+                    <span class="glyphicon glyphicon-user"></span> 联系人
+                </button>
+                <button type="button" class="btn btn-default navbar-btn" id="modal-521717" href="#modal-container-521717" data-toggle="modal" style="margin-left:30px;">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+                <button type="button" class="btn btn-default navbar-btn" id="deletbutton" href="#modal-delete" data-toggle="modal" style="margin-left:30px;">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+                <button class="checkAllchose" v-on:click="selectAllChange">{{checkAll?'取消全选':'全选'}}</button><p>已选中{{chosetotalcount}}条</p>
+            </div>
+            <div class="collapse navbar-collapse">
+                <form class="navbar-form navbar-left" role="search" style="margin-left:70px;">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="搜索姓名，微信号，电话或地址" style="width:500px;" v-model="searchData" />
+                    </div>
+                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-search"></span>搜索</button>
+                </form>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <button  v-on:click="getList" type="button" class="btn btn-info navbar-btn">
+                        查看全部
+                    </button>
+
+                    <a type="button" class="btn btn-warning navbar-btn" style="margin-right:20px;" href="Login.html">
+                        退出
+                    </a>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="panel-group" id="accordion2" >
+        <div class="row clearfix" >
+            <div class="col-md-12 column" >
+                <div class="row">
+                    <div class="col-md-4" v-for="item in newPers" :key="item.weixinnumber">
+                        <div class="thumbnail">
+                            <label class="checkbox left"  v-on:click="selectedPerson(item)" >
+                                <input type="checkbox"  value="{{item.id}}" v-bind:checked="item.checked" >
+                                </input>
+                            </label>
+                            <img alt="300x200"  src="/images/a.png" />
+                            <div class="caption">
+                                <h3>
+                                    {{ item.contacts }}
+                                </h3>
+
+                                <p>
+
+                                <li class="dropdown">
+                                    <a href="##" data-toggle="dropdown" class="dropdown-toggle" role="button" id="tutorial">详细信息<b class="caret"></b></a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="tutorial">
+                                        <li role="presentation"> {{ item.id }}</li>
+                                        <li role="presentation"><a href="##"> 邮箱：{{ item.mail }}</a></li>
+                                        <li role="presentation"><a href="##"> 手机：{{ item.Phone }}</a></li>
+                                        <li role="presentation"><a href="##">微信号： {{ item.weixinnumber }}</a></li>
+                                        <li role="presentation"><a href="##">地址： {{ item.adress }}</a></li>
+                                    </ul>
+                                </li>
+
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--删除确认框-->
+    <div class="modal fade" id="modal-delete" role="dialog" aria-hidden="true" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" aria-hidden="true" type="button" data-dismiss="modal">×</button>
+                    <h4 class="modal-title" >
+                        删除联系人
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    确定删除当前所选{{chosetotalcount}}个联系人？
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">取消</button> <button class="btn btn-primary" v-on:click="getAlldetelet" type="button" data-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--添加弹出框-->
+    <div class="modal fade" id="modal-container-521717" role="dialog" aria-hidden="true" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" aria-hidden="true" type="button" data-dismiss="modal">×</button>
+                    <h4 class="modal-title" >
+                        添加联系人
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row clearfix">
+                        <div class="col-md-12 column">
+                            <div>
+                                <label >姓名</label>
+                                <input class="form-control"  type="text" v-model="addcontractor.contacts" />
+                            </div>
+                            <div>
+                                <label >电话</label>
+                                <input class="form-control"  type="text" v-model="addcontractor.Phone" />
+                            </div>
+                            <div>
+                                <label >微信号</label>
+                                <input class="form-control"  type="text" v-model="addcontractor.weixinnumber" />
+                            </div>
+                            <div>
+                                <label >地址</label>
+                                <input class="form-control"  type="text" v-model="addcontractor.adress" />
+                            </div>
+                            <div>
+                                <label >Email address</label>
+                                <input class="form-control"  type="email" v-model="addcontractor.mail" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">关闭</button> <button class="btn btn-primary" type="button" v-on:click="addconnector" data-dismiss="modal">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+
+    var vm=	new Vue({
+        el: '#app-4',
+        data: {
+            lists:[],
+            searchData:'',
+            chosetotalcount:0,
+            checkAll:false,
+            addcontractor: {
+                userid: '',
+                contacts: '',
+                Phone: '',
+                mail:'',
+                weixinnumber:'',
+                adress:'',
+                id:null
+            }
+        },
+        computed: {
+            newPers: function () {
+                var that = this;
+                return that.lists.filter(function (per) {
+                    return per.contacts.toLowerCase().indexOf(that.searchData.toLowerCase()) !== -1;
+                })
+            }
+
+        },
+
+        mounted: function () {
+            this.$nextTick(function () {
+                this.getList();
+            });
+        },
+        //方法
+        methods: {
+            selectedPerson: function (item) {//单选时
+                if(typeof item.checked == "undefined"){
+                    //Vue.set(product,"checked",true);给item注册添加新属性
+                    this.$set(item,"checked",true);
+                }else{
+                    item.checked = !item.checked;
+                }
+                this.calcTotal();
+                this.isCheckAll();
+
+            },
+            calcTotal: function () {//计算已选个数
+                var chosetotalcount=0;
+                this.lists.forEach(function (item) {
+                    if(item.checked){
+                        chosetotalcount++;
+                    }
+                });
+                this.chosetotalcount = chosetotalcount;
+
+            },
+            selectAllChange:function(){//全选or取消全选
+                var isCheck=this.checkAll;
+                var _this=this;
+                this.lists.forEach(function (item) {
+
+                    if(typeof item.checked == "undefined"){
+                        //Vue.set(product,"checked",true);给item注册添加新属性
+                        _this.$set(item,"checked",!isCheck);
+                    }else{
+                        item.checked = !isCheck;
+                    }
+
+                    console.log("选中"+item.id+"值为"+item.checked);
+                });
+                this.calcTotal();
+                this.checkAll=!isCheck;
+            },
+            isCheckAll: function () {
+                var flag = true;
+                this.lists.forEach(function (item) {
+                    if(!item.checked){
+                        flag = false;
+                    }
+                });
+                if(flag){
+                    this.checkAll = true;
+                }else{
+                    this.checkAll = false;
+                }
+
+            },
+            getAlldetelet: function(){//查出所有需要删除的人并删除
+                var _this = this;
+                this.lists.forEach(function (item,index) {
+                    if(item.checked){
+                        console.log(item.id);
+                        //axios.get("/DeleteConn/?id="+item.id).then(
+                        axios.get("/DeleteConn", {
+                            params: {
+                                id: item.id
+                            }
+                        }).then(
+                                function(response){
+                                    _this.lists.splice(index,1);//删除当前联系人
+                                    console.log(response);
+                                    alert(response.data);
+                                },
+                                function(response){
+                                    alert("无法连接到服务器");
+                                });
+                    }
+                });
+            },
+            addconnector:function(){
+                var _this=this;
+                axios.get('/InsertConn', {
+                    params: {
+                        userid: _this.addcontractor.userid,
+                        contacts: _this.addcontractor.contacts,
+                        Phone: _this.addcontractor.Phone,
+                        mail:_this.addcontractor.mail,
+                        weixinnumber:_this.addcontractor.weixinnumber,
+                        adress:_this.addcontractor.adress,
+                        id:null
+                    }
+
+                }).then(function(response) {
+                    // 这里是处理正确的回调
+                    alert(response.data);
+                    _this.lists.push(_this.addcontractor);
+                    console.log(response);
+                }, function(response) {
+                    // 这里是处理错误的回调
+                    alert("添加失败");
+                });
+                this.calcTotal();
+                this.isCheckAll();
+
+            },
+            <!--获取lists数据-->
+            getList: function () {
+                var _this = this;
+                axios.get("/getConnectbooInfo").then(function(response){
+                    _this.lists=response.data;
+                    //alert("成功"+ _this.lists);
+                },function(errormessage){
+                    alert("失败"+ +errormessage);
+                })
+            }
+        }
+    });
+
+</script>
+<!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+<script src="https://code.jquery.com/jquery.js"></script>
+
+</body>
+</html>
